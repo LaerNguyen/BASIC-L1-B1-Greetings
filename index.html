@@ -94,7 +94,10 @@
     .drill { border: 1px solid var(--line); border-radius: 10px; padding: 18px; margin: 15px 0; }
     .drill-title { margin: 0 0 14px; color: var(--navy); font-size: 18px; }
     .drill-line { border-top: 1px solid #edf1f3; padding: 13px 0 4px; }
+    .drill-line:first-of-type { border-top: 0; padding-top: 0; }
+    .drill-line.variant { padding-left: 24px; }
     .drill-meaning { margin: 0 0 8px; color: var(--muted); font: 13px/1.5 "Montserrat", sans-serif; }
+    .drill-english-label { margin: 0 0 7px; color: var(--ink); font: 600 14px/1.4 "Montserrat", sans-serif; }
     .sortable-words { display: flex; flex-wrap: wrap; gap: 7px; min-height: 40px; }
     .sortable-word { border: 1px solid #9cc7b3; border-radius: 6px; background: var(--mint); color: var(--navy); padding: 8px 10px; font: 14px "Montserrat", sans-serif; cursor: grab; user-select: none; }
     .sortable-word:active { cursor: grabbing; }
@@ -211,9 +214,9 @@
       question.innerHTML = `<h3 class="drill-title">${drillIndex + 1}. Substitution Drill · Bài ${drillIndex + 1} / ${drillData.length}</h3>`;
       drill.forEach(([sentence, vietnamese], lineIndex) => {
         const line = document.createElement('div');
-        line.className = 'drill-line sortable-line';
+        line.className = `drill-line sortable-line${lineIndex === 0 ? ' base' : ' variant'}`;
         line.dataset.answer = normalize(sentence);
-        line.innerHTML = `<p class="drill-meaning">${vietnamese}</p><div class="sortable-words"></div><div class="correction"></div>`;
+        line.innerHTML = `<p class="drill-english-label">${lineIndex === 0 ? 'Câu mẫu:' : 'Từ thay thế:'}</p><div class="sortable-words"></div><p class="drill-meaning">${vietnamese}</p><div class="correction"></div>`;
         const wordList = line.querySelector('.sortable-words');
         shuffled(sentence.split(' ')).forEach(word => {
           const chip = document.createElement('button');
