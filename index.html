@@ -199,13 +199,14 @@
     ];
     const normalize = text => text.toLowerCase().replace(/[.,!?]/g, '').replace(/\s+/g, ' ').trim();
     const shuffled = items => items.slice().sort(() => Math.random() - 0.5);
+    const matchingQuizData = shuffled(matchingData);
     const matchingQuestions = document.getElementById('matching-questions');
     const arrangeQuestions = document.getElementById('arrange-questions');
 
-    matchingData.forEach(([english, vietnamese], index) => {
+    matchingQuizData.forEach(([english, vietnamese], index) => {
       const question = document.createElement('div');
       question.className = 'question translation-question';
-      question.innerHTML = `<div class="question-number">Câu ${index + 1} / ${matchingData.length}</div><div class="match-vietnamese">${vietnamese}</div><div class="options"></div>`;
+      question.innerHTML = `<div class="question-number">Câu ${index + 1} / ${matchingQuizData.length}</div><div class="match-vietnamese">${vietnamese}</div><div class="options"></div>`;
       const options = question.querySelector('.options');
       const distractors = matchingData.filter(item => item[0] !== english).map(item => item[0]);
       shuffled([english, ...shuffled(distractors).slice(0, 2)]).forEach(optionText => {
@@ -251,7 +252,7 @@
       const formData = new FormData(event.currentTarget);
       let correct = 0;
       let answered = 0;
-      matchingData.forEach(([english], index) => {
+      matchingQuizData.forEach(([english], index) => {
         const selected = formData.get(`matching-${index}`);
         const question = matchingQuestions.children[index];
         question.querySelectorAll('.option').forEach(option => {
