@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lesson 1 - Greeting</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
     :root {
       --navy: #17324d;
       --blue: #2d6cdf;
@@ -24,7 +26,7 @@
       margin: 0;
       color: var(--ink);
       background: linear-gradient(135deg, #d8f6e9 0%, #f4fff9 100%);
-      font-family: Georgia, "Times New Roman", serif;
+      font-family: "Montserrat", sans-serif;
       min-height: 100vh;
     }
     button, textarea { font: inherit; }
@@ -49,9 +51,9 @@
       right: -60px;
       top: -65px;
     }
-    .eyebrow { margin: 0 0 10px; color: #a9d4ff; font: 700 12px/1.2 Arial, sans-serif; letter-spacing: 1.8px; text-transform: uppercase; }
-    h1 { margin: 0; font-size: clamp(32px, 6vw, 54px); line-height: 1; font-weight: 700; }
-    .hero p { max-width: 610px; margin: 17px 0 0; color: #dbeafe; font: 16px/1.6 Arial, sans-serif; }
+    .eyebrow { margin: 0 0 10px; color: #a9d4ff; font: 700 12px/1.2 "Montserrat", sans-serif; letter-spacing: 1.8px; text-transform: uppercase; }
+    h1 { margin: 0; font-size: clamp(32px, 6vw, 54px); line-height: 1; font-weight: 800; }
+    .hero p { max-width: 610px; margin: 17px 0 0; color: #dbeafe; font: 16px/1.6 "Montserrat", sans-serif; }
 
     .chooser { background: white; padding: 20px; box-shadow: var(--shadow); }
     .chooser-title { margin: 0 0 14px; font-size: 19px; }
@@ -59,35 +61,38 @@
     .mode-button { border: 1px solid var(--line); background: #fff; color: var(--navy); border-radius: 10px; padding: 16px; text-align: left; transition: .2s ease; }
     .mode-button:hover, .mode-button.active { border-color: var(--blue); background: var(--sky); transform: translateY(-2px); }
     .mode-button strong { display: block; font-size: 18px; margin-bottom: 5px; }
-    .mode-button span { color: var(--muted); font: 13px/1.4 Arial, sans-serif; }
+    .mode-button span { color: var(--muted); font: 13px/1.4 "Montserrat", sans-serif; }
 
     .panel { display: none; background: white; padding: 28px 32px; box-shadow: var(--shadow); border-radius: 0 0 18px 18px; }
     .panel.active { display: block; animation: appear .35s ease both; }
     @keyframes appear { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     .panel-heading { display: flex; justify-content: space-between; align-items: end; gap: 16px; border-bottom: 1px solid var(--line); padding-bottom: 18px; margin-bottom: 22px; }
     h2 { margin: 0; font-size: 27px; color: var(--navy); }
-    .instruction { margin: 6px 0 0; color: var(--muted); font: 14px/1.5 Arial, sans-serif; }
-    .score { white-space: nowrap; color: var(--blue); font: 700 14px Arial, sans-serif; }
+    .instruction { margin: 6px 0 0; color: var(--muted); font: 14px/1.5 "Montserrat", sans-serif; }
+    .score { white-space: nowrap; color: var(--blue); font: 700 14px "Montserrat", sans-serif; }
     .question { border: 1px solid var(--line); border-radius: 10px; padding: 18px; margin: 15px 0; }
     .question p { margin: 0 0 13px; font-size: 18px; line-height: 1.45; }
     .question-number { color: var(--blue); font: 700 12px Arial, sans-serif; letter-spacing: .6px; text-transform: uppercase; }
-    .section-label { margin: 28px 0 4px; color: var(--navy); font: 700 20px Georgia, serif; }
+    .section-label { margin: 28px 0 4px; color: var(--navy); font: 700 20px/1.4 "Montserrat", sans-serif; }
     .match-row { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(220px, 1fr); align-items: center; gap: 16px; margin: 10px 0; }
-    .match-english { font: 16px/1.4 Arial, sans-serif; }
+    .match-english { font: 16px/1.4 "Montserrat", sans-serif; }
+    .match-vietnamese { color: var(--green); font: 500 15px/1.4 "Montserrat", sans-serif; }
+    .translation-question { margin: 12px 0; }
+    .translation-question .match-vietnamese { margin-bottom: 10px; color: var(--ink); font-weight: 700; }
     select { width: 100%; border: 1px solid var(--line); border-radius: 7px; background: white; padding: 10px; color: var(--ink); font: 14px Arial, sans-serif; }
     select:focus { outline: 2px solid #8fd1b5; border-color: var(--blue); }
     select.correct { background: #d9f5e6; border-color: var(--green); color: #126643; }
     select.wrong { background: #fde2e2; border-color: var(--red); color: #9b2c2c; }
-    .hint { margin: -6px 0 13px; color: var(--muted); font: italic 14px/1.4 Arial, sans-serif; }
+    .hint { margin: -6px 0 13px; color: var(--muted); font: italic 14px/1.4 "Montserrat", sans-serif; }
     .word-bank { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-    .word { border: 1px solid #aac9bd; border-radius: 6px; background: var(--mint); color: var(--navy); padding: 8px 10px; font: 14px Arial, sans-serif; }
+    .word { border: 1px solid #aac9bd; border-radius: 6px; background: var(--mint); color: var(--navy); padding: 8px 10px; font: 14px "Montserrat", sans-serif; }
     .word:hover { background: var(--sky); }
     .word.used { opacity: .4; cursor: default; }
-    .built-sentence { min-height: 26px; margin: 10px 0 0; color: var(--blue); font: 700 16px/1.5 Arial, sans-serif; }
+    .built-sentence { min-height: 26px; margin: 10px 0 0; color: var(--blue); font: 700 16px/1.5 "Montserrat", sans-serif; }
     .built-sentence.correct { color: var(--green); }
     .built-sentence.wrong { color: var(--red); }
     .options { display: grid; gap: 8px; }
-    .option { display: flex; gap: 10px; align-items: center; padding: 10px 12px; border: 1px solid #e5e7eb; border-radius: 7px; font: 15px/1.4 Arial, sans-serif; cursor: pointer; }
+    .option { display: flex; gap: 10px; align-items: center; padding: 10px 12px; border: 1px solid #e5e7eb; border-radius: 7px; font: 15px/1.4 "Montserrat", sans-serif; cursor: pointer; }
     .option:hover { background: var(--sky); border-color: #8fd1b5; }
     .option.correct { background: #d9f5e6; border-color: var(--green); color: #126643; }
     .option.wrong { background: #fde2e2; border-color: var(--red); color: #9b2c2c; }
@@ -95,18 +100,18 @@
     .option.wrong::after { content: "✕"; margin-left: auto; font-weight: 700; }
     .option input { accent-color: var(--blue); }
     .essay-prompt { margin: 21px 0 7px; font-size: 18px; line-height: 1.45; }
-    textarea { width: 100%; min-height: 88px; resize: vertical; border: 1px solid var(--line); border-radius: 8px; padding: 12px; color: var(--ink); font: 15px/1.5 Arial, sans-serif; }
+    textarea { width: 100%; min-height: 88px; resize: vertical; border: 1px solid var(--line); border-radius: 8px; padding: 12px; color: var(--ink); font: 15px/1.5 "Montserrat", sans-serif; }
     textarea:focus { outline: 2px solid #8fd1b5; border-color: var(--blue); }
     .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
-    .primary, .secondary { border: 0; border-radius: 7px; padding: 12px 18px; font: 700 14px Arial, sans-serif; }
+    .primary, .secondary { border: 0; border-radius: 7px; padding: 12px 18px; font: 700 14px "Montserrat", sans-serif; }
     .primary { background: var(--blue); color: white; }
     .primary:hover { background: #1f56ba; }
     .secondary { background: #edf2f7; color: var(--navy); }
-    .result { display: none; margin-top: 18px; padding: 15px 17px; border-left: 4px solid var(--green); background: #edf9f3; font: 15px/1.5 Arial, sans-serif; }
+    .result { display: none; margin-top: 18px; padding: 15px 17px; border-left: 4px solid var(--green); background: #edf9f3; font: 15px/1.5 "Montserrat", sans-serif; }
     .result.show { display: block; }
-    .answer { display: none; margin-top: 9px; padding: 12px; background: var(--cream); border-radius: 7px; color: #714d19; font: 14px/1.55 Arial, sans-serif; }
+    .answer { display: none; margin-top: 9px; padding: 12px; background: var(--cream); border-radius: 7px; color: #714d19; font: 14px/1.55 "Montserrat", sans-serif; }
     .answer.show { display: block; }
-    .footer { margin-top: 16px; text-align: center; color: var(--muted); font: 12px Arial, sans-serif; }
+    .footer { margin-top: 16px; text-align: center; color: var(--muted); font: 12px "Montserrat", sans-serif; }
     @media (max-width: 620px) {
       .shell { width: min(100% - 18px, 980px); padding-top: 10px; }
       .hero { padding: 27px 22px; }
@@ -126,28 +131,14 @@
       <p>Luyện các mẫu câu chào hỏi và những cách hỏi thăm thông dụng trong giao tiếp hằng ngày.</p>
     </header>
 
-    <section class="chooser" aria-label="Chọn dạng bài">
-      <h2 class="chooser-title">Chọn dạng bài tập</h2>
-      <div class="mode-buttons">
-        <button class="mode-button active" data-target="quiz-panel" type="button">
-          <strong>Trắc nghiệm</strong>
-          <span>8 câu · Chọn đáp án đúng và xem điểm.</span>
-        </button>
-        <button class="mode-button" data-target="essay-panel" type="button">
-          <strong>Tự luận</strong>
-          <span>4 câu · Tự viết câu trả lời bằng tiếng Anh.</span>
-        </button>
-      </div>
-    </section>
-
     <section class="panel active" id="quiz-panel">
       <div class="panel-heading">
-        <div><h2>Phần A · Multiple Choice</h2><p class="instruction">Chọn một đáp án đúng cho mỗi câu hỏi.</p></div>
+        <div><h2>I. Basic sentences | Mẫu câu cơ bản</h2><p class="instruction">Học và ghi nhớ các mẫu câu giao tiếp cơ bản.</p></div>
         <div class="score" id="quiz-score">Chưa nộp bài</div>
       </div>
       <form id="quiz-form">
         <div id="matching-questions"></div>
-        <div class="section-label">Phần 2 · Arrange the words</div>
+        <div class="section-label">II. Substitution Drills | Bài tập thay thế</div>
         <p class="instruction">Bấm vào các từ theo đúng thứ tự để tạo thành câu. Nghĩa tiếng Việt được đặt bên dưới.</p>
         <div id="arrange-questions"></div>
         <div class="actions"><button class="primary" type="submit">Nộp bài và xem điểm</button><button class="secondary" type="button" id="reset-quiz">Làm lại</button></div>
@@ -155,17 +146,6 @@
       <div class="result" id="quiz-result"></div>
     </section>
 
-    <section class="panel" id="essay-panel">
-      <div class="panel-heading"><div><h2>Phần B · Written Practice</h2><p class="instruction">Viết câu trả lời ngắn bằng tiếng Anh. Có thể xem đáp án tham khảo sau khi làm.</p></div></div>
-      <form id="essay-form">
-        <div class="essay-prompt"><strong>1.</strong> How are you doing today?</div><textarea name="e1" placeholder="Ví dụ: I’m doing okay."></textarea>
-        <div class="essay-prompt"><strong>2.</strong> Write a greeting for the morning.</div><textarea name="e2" placeholder="Viết câu chào buổi sáng..."></textarea>
-        <div class="essay-prompt"><strong>3.</strong> What do you say when you meet a friend after a long time?</div><textarea name="e3" placeholder="Viết câu trả lời..."></textarea>
-        <div class="essay-prompt"><strong>4.</strong> Make a sentence with “I am going to the park this afternoon.”</div><textarea name="e4" placeholder="Viết lại hoặc đặt câu tương tự..."></textarea>
-        <div class="actions"><button class="primary" type="button" id="show-answers">Hiện đáp án tham khảo</button><button class="secondary" type="button" id="reset-essay">Xóa câu trả lời</button></div>
-      </form>
-      <div class="answer" id="essay-answers"><strong>Đáp án tham khảo:</strong><br>1. I’m doing okay. / Not bad.<br>2. Good morning!<br>3. Long time no see! / It’s nice to see you again.<br>4. I am going to the park this afternoon.</div>
-    </section>
     <p class="footer">Lesson 1 · Greeting · Homework practice</p>
   </main>
   <script>
@@ -191,14 +171,18 @@
     const arrangeQuestions = document.getElementById('arrange-questions');
 
     matchingData.forEach(([english, vietnamese], index) => {
-      const row = document.createElement('div');
-      row.className = 'match-row';
-      row.innerHTML = `<div class="match-english"><strong>${index + 1}.</strong> ${english}</div>`;
-      const select = document.createElement('select');
-      select.name = `match-${index}`;
-      select.innerHTML = '<option value="">-- Chọn nghĩa tiếng Việt --</option>' + shuffled(matchingData.map(item => item[1])).map(item => `<option>${item}</option>`).join('');
-      row.appendChild(select);
-      matchingQuestions.appendChild(row);
+      const question = document.createElement('div');
+      question.className = 'question translation-question';
+      question.innerHTML = `<div class="question-number">Câu ${index + 1} / ${matchingData.length}</div><div class="match-vietnamese">${vietnamese}</div><div class="options"></div>`;
+      const options = question.querySelector('.options');
+      const distractors = matchingData.filter(item => item[0] !== english).map(item => item[0]);
+      shuffled([english, ...shuffled(distractors).slice(0, 2)]).forEach(optionText => {
+        const label = document.createElement('label');
+        label.className = 'option';
+        label.innerHTML = `<input type="radio" name="matching-${index}" value="${optionText}"> ${optionText}`;
+        options.appendChild(label);
+      });
+      matchingQuestions.appendChild(question);
     });
 
     arrangeData.forEach(([sentence, vietnamese], index) => {
@@ -225,27 +209,22 @@
       arrangeQuestions.appendChild(question);
     });
 
-    const modeButtons = document.querySelectorAll('.mode-button');
-    const panels = document.querySelectorAll('.panel');
-    modeButtons.forEach(button => button.addEventListener('click', () => {
-      modeButtons.forEach(item => item.classList.remove('active'));
-      panels.forEach(panel => panel.classList.remove('active'));
-      button.classList.add('active');
-      document.getElementById(button.dataset.target).classList.add('active');
-    }));
-
     document.getElementById('quiz-form').addEventListener('submit', event => {
       event.preventDefault();
       const formData = new FormData(event.currentTarget);
       let correct = 0;
       let answered = 0;
-      matchingData.forEach(([english, vietnamese], index) => {
-        const selected = formData.get(`match-${index}`);
-        const select = document.querySelector(`select[name="match-${index}"]`);
-        select.classList.remove('correct', 'wrong');
+      matchingData.forEach(([english], index) => {
+        const selected = formData.get(`matching-${index}`);
+        const question = matchingQuestions.children[index];
+        question.querySelectorAll('.option').forEach(option => {
+          const input = option.querySelector('input');
+          option.classList.remove('correct', 'wrong');
+          if (input.value === english) option.classList.add('correct');
+          if (input.checked && input.value !== english) option.classList.add('wrong');
+        });
         if (selected) answered++;
-        if (selected === vietnamese) { correct++; select.classList.add('correct'); }
-        else if (selected) select.classList.add('wrong');
+        if (selected === english) correct++;
       });
       const arrangeQuestionsList = document.querySelectorAll('.arrange-question');
       arrangeQuestionsList.forEach(question => {
@@ -267,7 +246,7 @@
 
     document.getElementById('reset-quiz').addEventListener('click', () => {
       document.getElementById('quiz-form').reset();
-      document.querySelectorAll('select').forEach(select => select.classList.remove('correct', 'wrong'));
+      document.querySelectorAll('.option').forEach(option => option.classList.remove('correct', 'wrong'));
       document.querySelectorAll('.arrange-question').forEach(question => {
         question.dataset.selected = '';
         question.querySelector('.built-sentence').textContent = '';
@@ -277,8 +256,6 @@
       document.getElementById('quiz-result').classList.remove('show');
       document.getElementById('quiz-score').textContent = 'Chưa nộp bài';
     });
-    document.getElementById('show-answers').addEventListener('click', () => document.getElementById('essay-answers').classList.toggle('show'));
-    document.getElementById('reset-essay').addEventListener('click', () => { document.getElementById('essay-form').reset(); document.getElementById('essay-answers').classList.remove('show'); });
   </script>
 </body>
 </html>
