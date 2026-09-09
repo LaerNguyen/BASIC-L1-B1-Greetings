@@ -91,6 +91,17 @@
     .built-sentence { min-height: 26px; margin: 10px 0 0; color: var(--blue); font: 700 16px/1.5 "Montserrat", sans-serif; }
     .built-sentence.correct { color: var(--green); }
     .built-sentence.wrong { color: var(--red); }
+    .drill { border: 1px solid var(--line); border-radius: 10px; padding: 18px; margin: 15px 0; }
+    .drill-title { margin: 0 0 14px; color: var(--navy); font-size: 18px; }
+    .drill-line { border-top: 1px solid #edf1f3; padding: 13px 0 4px; }
+    .drill-meaning { margin: 0 0 8px; color: var(--muted); font: 13px/1.5 "Montserrat", sans-serif; }
+    .sortable-words { display: flex; flex-wrap: wrap; gap: 7px; min-height: 40px; }
+    .sortable-word { border: 1px solid #9cc7b3; border-radius: 6px; background: var(--mint); color: var(--navy); padding: 8px 10px; font: 14px "Montserrat", sans-serif; cursor: grab; user-select: none; }
+    .sortable-word:active { cursor: grabbing; }
+    .sortable-words.correct { border: 2px solid var(--green); background: #f0fbf5; padding: 5px; }
+    .sortable-words.wrong { border: 2px solid var(--red); background: #fff2f2; padding: 5px; }
+    .correction { display: none; margin: 9px 0 0; color: var(--red); font: 600 13px/1.5 "Montserrat", sans-serif; }
+    .correction.show { display: block; }
     .options { display: grid; gap: 8px; }
     .option { display: flex; gap: 10px; align-items: center; padding: 10px 12px; border: 1px solid #e5e7eb; border-radius: 7px; font: 15px/1.4 "Montserrat", sans-serif; cursor: pointer; }
     .option:hover { background: var(--sky); border-color: #8fd1b5; }
@@ -157,13 +168,22 @@
       ['Long time no see', 'Lâu quá không gặp'], ['How have you been?', 'Lâu nay bạn thế nào?'],
       ['How are things with you?', 'Mọi việc với bạn thế nào?'], ['What are you doing here?', 'Bạn đang làm gì ở đây?']
     ];
-    const arrangeData = [
-      ['Do you think it will rain today?', 'Bạn có nghĩ hôm nay trời sẽ mưa không?'],
-      ['Hello, Bill.', 'Chào Bill.'], ['Did you have a good time hiking today?', 'Hôm nay bạn đi bộ việt dã vui chứ?'],
-      ['Is Doctor Kolb in?', 'Có bác sĩ Kolb trong phòng mạch không?'], ['It’s hard to tell.', 'Khó nói trước được.'],
-      ['Oh, hey, Mark.', 'Ồ, chào Mark.'], ['Yes, although it was a bit hot.', 'Vâng, mặc dù trời hơi nóng.'],
-      ['I read a book.', 'Tôi đọc một quyển sách.'], ['I am going to the beach this afternoon.', 'Chiều nay tôi định ra biển.'],
-      ['That is why I stayed inside.', 'Bởi vậy tôi đã ở nhà.']
+    const drillData = [
+      [['Do you think it will rain today?', 'Bạn có nghĩ là hôm nay trời sẽ mưa không?'], ['Do you think it will rain tomorrow?', 'Ngày mai?'], ['Do you think it will rain tonight?', 'Tối nay?'], ['Do you think it will rain this afternoon?', 'Chiều nay?']],
+      [['Hello, Bill.', 'Chào Bill'], ['Good afternoon, Bill.', 'Xin chào buổi chiều'], ['Good morning, Bill.', 'Xin chào buổi sáng'], ['Good evening, Bill.', 'Xin chào buổi tối']],
+      [['Did you have a good time hiking today?', 'Hôm nay bạn đi bộ việt dã vui chứ?'], ['Did you have a good time reading today?', 'Hôm nay bạn đọc sách vui chứ?'], ['Did you have a good time walking today?', 'Hôm nay bạn đi dạo vui chứ?'], ['Did you have a good time swimming today?', 'Hôm nay bạn đi bơi vui chứ?']],
+      [['Is Doctor Kolb in?', 'Có bác sĩ Kolb trong phòng mạch không ạ?'], ['Is Doctor Kolb available?', 'Có bác sĩ Kolb ở đây không ạ?'], ['Is Doctor Kolb here?', 'Có bác sĩ Kolb ở đây không ạ?'], ['Is Doctor Kolb around?', 'Có bác sĩ Kolb ở đây không ạ?']],
+      [['It’s hard to tell.', 'Khó nói trước được.'], ['It’s tough to tell.', 'Thật khó nói.'], ['It’s difficult to tell.', 'Khó nói.'], ['It’s not easy to tell.', 'Không dễ nói.']],
+      [['Oh, hey, Mark.', 'Ồ, chào Mark'], ['Oh, hi, Mark.', 'Ồ, chào Mark'], ['Oh, hello, Mark.', 'Ồ, chào Mark'], ['Oh, good morning, Mark.', 'Ồ, xin chào Mark']],
+      [['Yes, although it was a bit hot.', 'Vâng, mặc dù trời hơi nóng.'], ['Yes, although it was a bit cold.', 'Vâng, mặc dù trời hơi lạnh.'], ['Yes, although it was a bit wet.', 'Vâng, mặc dù trời hơi ẩm ướt.'], ['Yes, although it was a bit cloudy.', 'Vâng, mặc dù trời hơi âm u.']],
+      [['I read a book.', 'Tôi đọc sách.'], ['I read a magazine.', 'Tôi đọc tạp chí.'], ['I read a story.', 'Tôi đọc truyện.'], ['I read a poem.', 'Tôi đọc thơ.']],
+      [['I am going to the beach this afternoon.', 'Chiều nay tôi định ra biển.'], ['I am going to the park this afternoon.', 'Chiều nay tôi định ra công viên.'], ['I am going to the library this afternoon.', 'Chiều nay tôi định ra thư viện.'], ['I am going to the store this afternoon.', 'Chiều nay tôi định ra cửa hàng.']],
+      [['That is why I stayed inside.', 'Bởi vậy tôi đã ở nhà.'], ['That is why I stayed indoors.', 'Bởi vậy tôi đã ở nhà.'], ['That is why I stayed in the shade.', 'Bởi vậy tôi đã ở trong bóng râm.'], ['That is why I stayed in.', 'Bởi vậy tôi đã ở nhà.']],
+      [['How are you doing?', 'Bạn có khỏe không?'], ['How are things?', 'Mọi việc thế nào?'], ['How are you feeling?', 'Bạn thấy thế nào?'], ['How are you?', 'Bạn có khỏe không?']],
+      [['It’s hard to tell.', 'Khó nói trước được.'], ['It’s hard to know.', 'Khó biết.'], ['It’s hard to say.', 'Khó nói.'], ['It’s hard to be sure.', 'Khó chắc chắn.']],
+      [['I’m doing okay, although my car is in the shop.', 'Tôi thì ổn, nhưng ô tô đang ở hiệu sửa xe.'], ['I’m doing well, although my car is in the shop.', 'Tôi khỏe, nhưng ô tô đang ở hiệu sửa xe.'], ['I’m doing good, although my car is in the shop.', 'Tôi khỏe, nhưng ô tô đang ở hiệu sửa xe.'], ['I’m doing fine, although my car is in the shop.', 'Tôi khỏe, nhưng ô tô đang ở hiệu sửa xe.']],
+      [['I’m doing okay, although my car is in the shop.', 'Tôi thì ổn, nhưng ô tô đang ở hiệu sửa xe.'], ['I’m doing okay, although my bike is in the shop.', 'Tôi thì ổn, nhưng xe đạp đang ở hiệu sửa xe.'], ['I’m doing okay, although my boat is in the shop.', 'Tôi thì ổn, nhưng tàu đang ở hiệu sửa xe.'], ['I’m doing okay, although my guitar is in the shop.', 'Tôi thì ổn, nhưng đàn ghi ta đang ở hiệu sửa xe.']],
+      [['Maybe you should check the weather forecast first.', 'Có lẽ bạn nên xem kỹ dự báo thời tiết trước đã.'], ['Maybe you should watch the weather forecast first.', 'Có lẽ bạn nên theo dõi dự báo thời tiết trước đã.'], ['Maybe you should listen to the weather forecast first.', 'Có lẽ bạn nên nghe dự báo thời tiết trước đã.'], ['Maybe you should see the weather forecast first.', 'Có lẽ bạn nên xem dự báo thời tiết trước đã.']]
     ];
     const normalize = text => text.toLowerCase().replace(/[.,!?]/g, '').replace(/\s+/g, ' ').trim();
     const shuffled = items => items.slice().sort(() => Math.random() - 0.5);
@@ -185,26 +205,31 @@
       matchingQuestions.appendChild(question);
     });
 
-    arrangeData.forEach(([sentence, vietnamese], index) => {
+    drillData.forEach((drill, drillIndex) => {
       const question = document.createElement('div');
-      question.className = 'question arrange-question';
-      question.dataset.answer = normalize(sentence);
-      question.dataset.selected = '';
-      const words = sentence.split(' ');
-      question.innerHTML = `<div class="question-number">Question ${index + 1}</div><p class="hint">${vietnamese}</p><div class="built-sentence"></div><div class="word-bank"></div>`;
-      const bank = question.querySelector('.word-bank');
-      shuffled(words).forEach(word => {
-        const button = document.createElement('button');
-        button.className = 'word';
-        button.type = 'button';
-        button.textContent = word;
-        button.addEventListener('click', () => {
-          if (button.classList.contains('used')) return;
-          button.classList.add('used');
-          question.dataset.selected = `${question.dataset.selected} ${word}`.trim();
-          question.querySelector('.built-sentence').textContent = question.dataset.selected;
+      question.className = 'drill arrange-question';
+      question.innerHTML = `<h3 class="drill-title">${drillIndex + 1}. Substitution Drill · Bài ${drillIndex + 1} / ${drillData.length}</h3>`;
+      drill.forEach(([sentence, vietnamese], lineIndex) => {
+        const line = document.createElement('div');
+        line.className = 'drill-line sortable-line';
+        line.dataset.answer = normalize(sentence);
+        line.innerHTML = `<p class="drill-meaning">${vietnamese}</p><div class="sortable-words"></div><div class="correction"></div>`;
+        const wordList = line.querySelector('.sortable-words');
+        shuffled(sentence.split(' ')).forEach(word => {
+          const chip = document.createElement('button');
+          chip.className = 'sortable-word';
+          chip.type = 'button';
+          chip.draggable = true;
+          chip.textContent = word;
+          chip.addEventListener('dragstart', () => { line.draggedWord = chip; });
+          chip.addEventListener('dragover', event => event.preventDefault());
+          chip.addEventListener('drop', event => {
+            event.preventDefault();
+            if (line.draggedWord && line.draggedWord !== chip) wordList.insertBefore(line.draggedWord, chip);
+          });
+          wordList.appendChild(chip);
         });
-        bank.appendChild(button);
+        question.appendChild(line);
       });
       arrangeQuestions.appendChild(question);
     });
@@ -228,14 +253,28 @@
       });
       const arrangeQuestionsList = document.querySelectorAll('.arrange-question');
       arrangeQuestionsList.forEach(question => {
-        const builtSentence = question.querySelector('.built-sentence');
-        builtSentence.classList.remove('correct', 'wrong');
-        if (question.dataset.selected) answered++;
-        if (normalize(question.dataset.selected) === question.dataset.answer) { correct++; builtSentence.classList.add('correct'); }
-        else if (question.dataset.selected) builtSentence.classList.add('wrong');
+        const lines = question.querySelectorAll('.sortable-line');
+        let drillCorrect = true;
+        lines.forEach(line => {
+          const words = Array.from(line.querySelectorAll('.sortable-word')).map(word => word.textContent).join(' ');
+          const wordArea = line.querySelector('.sortable-words');
+          const correction = line.querySelector('.correction');
+          wordArea.classList.remove('correct', 'wrong');
+          correction.classList.remove('show');
+          if (normalize(words) === line.dataset.answer) {
+            wordArea.classList.add('correct');
+          } else {
+            drillCorrect = false;
+            wordArea.classList.add('wrong');
+            correction.innerHTML = `Bạn sắp xếp: <strong>${words}</strong><br>Sửa lại: <strong>${line.dataset.answer}</strong>`;
+            correction.classList.add('show');
+          }
+        });
+        answered++;
+        if (drillCorrect) correct++;
       });
       const result = document.getElementById('quiz-result');
-      const total = matchingData.length + arrangeData.length;
+      const total = matchingData.length + drillData.length;
       result.innerHTML = answered < total
         ? `Bạn đã hoàn thành ${answered}/${total} câu. Hãy làm hết bài rồi nộp lại để xem điểm cuối cùng.`
         : `Bạn đúng <strong>${correct}/${total}</strong> câu (${(correct / total * 10).toFixed(1)}/10 điểm). ${correct >= total * .7 ? 'Tốt lắm!' : 'Hãy xem lại bài và thử lại nhé.'}`;
@@ -247,11 +286,9 @@
     document.getElementById('reset-quiz').addEventListener('click', () => {
       document.getElementById('quiz-form').reset();
       document.querySelectorAll('.option').forEach(option => option.classList.remove('correct', 'wrong'));
-      document.querySelectorAll('.arrange-question').forEach(question => {
-        question.dataset.selected = '';
-        question.querySelector('.built-sentence').textContent = '';
-        question.querySelector('.built-sentence').classList.remove('correct', 'wrong');
-        question.querySelectorAll('.word').forEach(word => word.classList.remove('used'));
+      document.querySelectorAll('.sortable-line').forEach(line => {
+        line.querySelector('.sortable-words').classList.remove('correct', 'wrong');
+        line.querySelector('.correction').classList.remove('show');
       });
       document.getElementById('quiz-result').classList.remove('show');
       document.getElementById('quiz-score').textContent = 'Chưa nộp bài';
