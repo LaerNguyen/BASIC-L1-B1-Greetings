@@ -166,19 +166,19 @@
     const matchingData = [
       ['Hello', 'Chào'],
       ['Good morning / Good afternoon / Good evening / Good night', 'Chào buổi sáng / Chào buổi trưa / Chào buổi tối / Chúc ngủ ngon'],
-      ['Hi, there', 'Chào bạn.'],
-      ['Hey.', 'Chào'],
       ['How are you doing? / How are you?', 'Bạn thế nào / Có khỏe không?'],
       ['Not bad', 'Tàm tạm / Không tệ'],
-      ["What’s up? / What’s happening?", 'Có chuyện gì vậy?'],
+      ["What’s (what is) up? / What’s happen?", 'Có chuyện gì vậy?'],
       ['It’s nice to meet you / Nice to meet you', 'Rất vui được gặp bạn.'],
       ['It’s nice to see you again', 'Rất vui được gặp lại bạn'],
       ['I’m surprised to see you here', 'Tôi thấy bất ngờ vì gặp bạn ở đây'],
       ['Long time no see', 'Lâu quá không gặp'],
       ['How have you been?', 'Lâu nay bạn thế nào?'],
+      ['Hi, there', 'Chào bạn.'],
       ['How are things with you?', 'Mọi việc với bạn thế nào?'],
       ['What’s going on with you?', 'Bạn thế nào?'],
-      ['What are you doing here?', 'Bạn đang làm gì ở đây vậy?']
+      ['What are you doing here?', 'Bạn đang làm gì ở đây vậy?'],
+      ['Hey.', 'Chào']
     ];
     const drillData = [
       [['Do you think it will rain today?', 'Bạn có nghĩ là hôm nay trời sẽ mưa không?'], ['Do you think it will rain tomorrow?', 'Ngày mai?'], ['Do you think it will rain tonight?', 'Tối nay?'], ['Do you think it will rain this afternoon?', 'Chiều nay?']],
@@ -199,7 +199,7 @@
     ];
     const normalize = text => text.toLowerCase().replace(/[.,!?]/g, '').replace(/\s+/g, ' ').trim();
     const shuffled = items => items.slice().sort(() => Math.random() - 0.5);
-    const matchingQuizData = shuffled(matchingData);
+    const matchingQuizData = matchingData;
     const matchingQuestions = document.getElementById('matching-questions');
     const arrangeQuestions = document.getElementById('arrange-questions');
 
