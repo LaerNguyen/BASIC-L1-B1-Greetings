@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 1 - Greeting</title>
+  <style>
+    :root {
+      --navy: #17324d;
+      --blue: #2d6cdf;
+      --sky: #dff7ee;
+      --mint: #effcf7;
+      --cream: #fffaf0;
+      --ink: #1d2939;
+      --muted: #667085;
+      --line: #d9e2ec;
+      --green: #16845b;
+      --red: #c24141;
+      --shadow: 0 18px 45px rgba(23, 50, 77, .12);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: linear-gradient(135deg, #d8f6e9 0%, #f4fff9 100%);
+      font-family: Georgia, "Times New Roman", serif;
+      min-height: 100vh;
+    }
+    button, textarea { font: inherit; }
+    button { cursor: pointer; }
+    .shell { width: min(100% - 32px, 980px); margin: 0 auto; padding: 34px 0 56px; }
+    .hero {
+      background: var(--navy);
+      color: #fff;
+      padding: 34px 38px;
+      border-radius: 18px 18px 6px 6px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 190px;
+      height: 190px;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 50%;
+      right: -60px;
+      top: -65px;
+    }
+    .eyebrow { margin: 0 0 10px; color: #a9d4ff; font: 700 12px/1.2 Arial, sans-serif; letter-spacing: 1.8px; text-transform: uppercase; }
+    h1 { margin: 0; font-size: clamp(32px, 6vw, 54px); line-height: 1; font-weight: 700; }
+    .hero p { max-width: 610px; margin: 17px 0 0; color: #dbeafe; font: 16px/1.6 Arial, sans-serif; }
+
+    .chooser { background: white; padding: 20px; box-shadow: var(--shadow); }
+    .chooser-title { margin: 0 0 14px; font-size: 19px; }
+    .mode-buttons { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .mode-button { border: 1px solid var(--line); background: #fff; color: var(--navy); border-radius: 10px; padding: 16px; text-align: left; transition: .2s ease; }
+    .mode-button:hover, .mode-button.active { border-color: var(--blue); background: var(--sky); transform: translateY(-2px); }
+    .mode-button strong { display: block; font-size: 18px; margin-bottom: 5px; }
+    .mode-button span { color: var(--muted); font: 13px/1.4 Arial, sans-serif; }
+
+    .panel { display: none; background: white; padding: 28px 32px; box-shadow: var(--shadow); border-radius: 0 0 18px 18px; }
+    .panel.active { display: block; animation: appear .35s ease both; }
+    @keyframes appear { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .panel-heading { display: flex; justify-content: space-between; align-items: end; gap: 16px; border-bottom: 1px solid var(--line); padding-bottom: 18px; margin-bottom: 22px; }
+    h2 { margin: 0; font-size: 27px; color: var(--navy); }
+    .instruction { margin: 6px 0 0; color: var(--muted); font: 14px/1.5 Arial, sans-serif; }
+    .score { white-space: nowrap; color: var(--blue); font: 700 14px Arial, sans-serif; }
+    .question { border: 1px solid var(--line); border-radius: 10px; padding: 18px; margin: 15px 0; }
+    .question p { margin: 0 0 13px; font-size: 18px; line-height: 1.45; }
+    .question-number { color: var(--blue); font: 700 12px Arial, sans-serif; letter-spacing: .6px; text-transform: uppercase; }
+    .section-label { margin: 28px 0 4px; color: var(--navy); font: 700 20px Georgia, serif; }
+    .match-row { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(220px, 1fr); align-items: center; gap: 16px; margin: 10px 0; }
+    .match-english { font: 16px/1.4 Arial, sans-serif; }
+    select { width: 100%; border: 1px solid var(--line); border-radius: 7px; background: white; padding: 10px; color: var(--ink); font: 14px Arial, sans-serif; }
+    select:focus { outline: 2px solid #8fd1b5; border-color: var(--blue); }
+    select.correct { background: #d9f5e6; border-color: var(--green); color: #126643; }
+    select.wrong { background: #fde2e2; border-color: var(--red); color: #9b2c2c; }
+    .hint { margin: -6px 0 13px; color: var(--muted); font: italic 14px/1.4 Arial, sans-serif; }
+    .word-bank { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .word { border: 1px solid #aac9bd; border-radius: 6px; background: var(--mint); color: var(--navy); padding: 8px 10px; font: 14px Arial, sans-serif; }
+    .word:hover { background: var(--sky); }
+    .word.used { opacity: .4; cursor: default; }
+    .built-sentence { min-height: 26px; margin: 10px 0 0; color: var(--blue); font: 700 16px/1.5 Arial, sans-serif; }
+    .built-sentence.correct { color: var(--green); }
+    .built-sentence.wrong { color: var(--red); }
+    .options { display: grid; gap: 8px; }
+    .option { display: flex; gap: 10px; align-items: center; padding: 10px 12px; border: 1px solid #e5e7eb; border-radius: 7px; font: 15px/1.4 Arial, sans-serif; cursor: pointer; }
+    .option:hover { background: var(--sky); border-color: #8fd1b5; }
+    .option.correct { background: #d9f5e6; border-color: var(--green); color: #126643; }
+    .option.wrong { background: #fde2e2; border-color: var(--red); color: #9b2c2c; }
+    .option.correct::after { content: "✓"; margin-left: auto; font-weight: 700; }
+    .option.wrong::after { content: "✕"; margin-left: auto; font-weight: 700; }
+    .option input { accent-color: var(--blue); }
+    .essay-prompt { margin: 21px 0 7px; font-size: 18px; line-height: 1.45; }
+    textarea { width: 100%; min-height: 88px; resize: vertical; border: 1px solid var(--line); border-radius: 8px; padding: 12px; color: var(--ink); font: 15px/1.5 Arial, sans-serif; }
+    textarea:focus { outline: 2px solid #8fd1b5; border-color: var(--blue); }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+    .primary, .secondary { border: 0; border-radius: 7px; padding: 12px 18px; font: 700 14px Arial, sans-serif; }
+    .primary { background: var(--blue); color: white; }
+    .primary:hover { background: #1f56ba; }
+    .secondary { background: #edf2f7; color: var(--navy); }
+    .result { display: none; margin-top: 18px; padding: 15px 17px; border-left: 4px solid var(--green); background: #edf9f3; font: 15px/1.5 Arial, sans-serif; }
+    .result.show { display: block; }
+    .answer { display: none; margin-top: 9px; padding: 12px; background: var(--cream); border-radius: 7px; color: #714d19; font: 14px/1.55 Arial, sans-serif; }
+    .answer.show { display: block; }
+    .footer { margin-top: 16px; text-align: center; color: var(--muted); font: 12px Arial, sans-serif; }
+    @media (max-width: 620px) {
+      .shell { width: min(100% - 18px, 980px); padding-top: 10px; }
+      .hero { padding: 27px 22px; }
+      .chooser, .panel { padding: 20px 16px; }
+      .mode-buttons { grid-template-columns: 1fr; }
+      .match-row { grid-template-columns: 1fr; gap: 6px; }
+      .panel-heading { display: block; }
+      .score { display: block; margin-top: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <p class="eyebrow">Basic English · Lesson 1</p>
+      <h1>Greeting</h1>
+      <p>Luyện các mẫu câu chào hỏi và những cách hỏi thăm thông dụng trong giao tiếp hằng ngày.</p>
+    </header>
+
+    <section class="chooser" aria-label="Chọn dạng bài">
+      <h2 class="chooser-title">Chọn dạng bài tập</h2>
+      <div class="mode-buttons">
+        <button class="mode-button active" data-target="quiz-panel" type="button">
+          <strong>Trắc nghiệm</strong>
+          <span>8 câu · Chọn đáp án đúng và xem điểm.</span>
+        </button>
+        <button class="mode-button" data-target="essay-panel" type="button">
+          <strong>Tự luận</strong>
+          <span>4 câu · Tự viết câu trả lời bằng tiếng Anh.</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="panel active" id="quiz-panel">
+      <div class="panel-heading">
+        <div><h2>Phần A · Multiple Choice</h2><p class="instruction">Chọn một đáp án đúng cho mỗi câu hỏi.</p></div>
+        <div class="score" id="quiz-score">Chưa nộp bài</div>
+      </div>
+      <form id="quiz-form">
+        <div id="matching-questions"></div>
+        <div class="section-label">Phần 2 · Arrange the words</div>
+        <p class="instruction">Bấm vào các từ theo đúng thứ tự để tạo thành câu. Nghĩa tiếng Việt được đặt bên dưới.</p>
+        <div id="arrange-questions"></div>
+        <div class="actions"><button class="primary" type="submit">Nộp bài và xem điểm</button><button class="secondary" type="button" id="reset-quiz">Làm lại</button></div>
+      </form>
+      <div class="result" id="quiz-result"></div>
+    </section>
+
+    <section class="panel" id="essay-panel">
+      <div class="panel-heading"><div><h2>Phần B · Written Practice</h2><p class="instruction">Viết câu trả lời ngắn bằng tiếng Anh. Có thể xem đáp án tham khảo sau khi làm.</p></div></div>
+      <form id="essay-form">
+        <div class="essay-prompt"><strong>1.</strong> How are you doing today?</div><textarea name="e1" placeholder="Ví dụ: I’m doing okay."></textarea>
+        <div class="essay-prompt"><strong>2.</strong> Write a greeting for the morning.</div><textarea name="e2" placeholder="Viết câu chào buổi sáng..."></textarea>
+        <div class="essay-prompt"><strong>3.</strong> What do you say when you meet a friend after a long time?</div><textarea name="e3" placeholder="Viết câu trả lời..."></textarea>
+        <div class="essay-prompt"><strong>4.</strong> Make a sentence with “I am going to the park this afternoon.”</div><textarea name="e4" placeholder="Viết lại hoặc đặt câu tương tự..."></textarea>
+        <div class="actions"><button class="primary" type="button" id="show-answers">Hiện đáp án tham khảo</button><button class="secondary" type="button" id="reset-essay">Xóa câu trả lời</button></div>
+      </form>
+      <div class="answer" id="essay-answers"><strong>Đáp án tham khảo:</strong><br>1. I’m doing okay. / Not bad.<br>2. Good morning!<br>3. Long time no see! / It’s nice to see you again.<br>4. I am going to the park this afternoon.</div>
+    </section>
+    <p class="footer">Lesson 1 · Greeting · Homework practice</p>
+  </main>
+  <script>
+    const matchingData = [
+      ['Hello', 'Chào'], ['Good morning', 'Chào buổi sáng'], ['Good afternoon', 'Chào buổi trưa'],
+      ['Good evening', 'Chào buổi tối'], ['Good night', 'Chúc ngủ ngon'], ['How are you doing?', 'Bạn thế nào?'],
+      ['Not bad', 'Tàm tạm / không tệ'], ['What’s up?', 'Có chuyện gì vậy?'], ['Nice to meet you', 'Rất vui được gặp bạn'],
+      ['It’s nice to see you again', 'Rất vui được gặp lại bạn'], ['I’m surprised to see you here', 'Tôi bất ngờ vì gặp bạn ở đây'],
+      ['Long time no see', 'Lâu quá không gặp'], ['How have you been?', 'Lâu nay bạn thế nào?'],
+      ['How are things with you?', 'Mọi việc với bạn thế nào?'], ['What are you doing here?', 'Bạn đang làm gì ở đây?']
+    ];
+    const arrangeData = [
+      ['Do you think it will rain today?', 'Bạn có nghĩ hôm nay trời sẽ mưa không?'],
+      ['Hello, Bill.', 'Chào Bill.'], ['Did you have a good time hiking today?', 'Hôm nay bạn đi bộ việt dã vui chứ?'],
+      ['Is Doctor Kolb in?', 'Có bác sĩ Kolb trong phòng mạch không?'], ['It’s hard to tell.', 'Khó nói trước được.'],
+      ['Oh, hey, Mark.', 'Ồ, chào Mark.'], ['Yes, although it was a bit hot.', 'Vâng, mặc dù trời hơi nóng.'],
+      ['I read a book.', 'Tôi đọc một quyển sách.'], ['I am going to the beach this afternoon.', 'Chiều nay tôi định ra biển.'],
+      ['That is why I stayed inside.', 'Bởi vậy tôi đã ở nhà.']
+    ];
+    const normalize = text => text.toLowerCase().replace(/[.,!?]/g, '').replace(/\s+/g, ' ').trim();
+    const shuffled = items => items.slice().sort(() => Math.random() - 0.5);
+    const matchingQuestions = document.getElementById('matching-questions');
+    const arrangeQuestions = document.getElementById('arrange-questions');
+
+    matchingData.forEach(([english, vietnamese], index) => {
+      const row = document.createElement('div');
+      row.className = 'match-row';
+      row.innerHTML = `<div class="match-english"><strong>${index + 1}.</strong> ${english}</div>`;
+      const select = document.createElement('select');
+      select.name = `match-${index}`;
+      select.innerHTML = '<option value="">-- Chọn nghĩa tiếng Việt --</option>' + shuffled(matchingData.map(item => item[1])).map(item => `<option>${item}</option>`).join('');
+      row.appendChild(select);
+      matchingQuestions.appendChild(row);
+    });
+
+    arrangeData.forEach(([sentence, vietnamese], index) => {
+      const question = document.createElement('div');
+      question.className = 'question arrange-question';
+      question.dataset.answer = normalize(sentence);
+      question.dataset.selected = '';
+      const words = sentence.split(' ');
+      question.innerHTML = `<div class="question-number">Question ${index + 1}</div><p class="hint">${vietnamese}</p><div class="built-sentence"></div><div class="word-bank"></div>`;
+      const bank = question.querySelector('.word-bank');
+      shuffled(words).forEach(word => {
+        const button = document.createElement('button');
+        button.className = 'word';
+        button.type = 'button';
+        button.textContent = word;
+        button.addEventListener('click', () => {
+          if (button.classList.contains('used')) return;
+          button.classList.add('used');
+          question.dataset.selected = `${question.dataset.selected} ${word}`.trim();
+          question.querySelector('.built-sentence').textContent = question.dataset.selected;
+        });
+        bank.appendChild(button);
+      });
+      arrangeQuestions.appendChild(question);
+    });
+
+    const modeButtons = document.querySelectorAll('.mode-button');
+    const panels = document.querySelectorAll('.panel');
+    modeButtons.forEach(button => button.addEventListener('click', () => {
+      modeButtons.forEach(item => item.classList.remove('active'));
+      panels.forEach(panel => panel.classList.remove('active'));
+      button.classList.add('active');
+      document.getElementById(button.dataset.target).classList.add('active');
+    }));
+
+    document.getElementById('quiz-form').addEventListener('submit', event => {
+      event.preventDefault();
+      const formData = new FormData(event.currentTarget);
+      let correct = 0;
+      let answered = 0;
+      matchingData.forEach(([english, vietnamese], index) => {
+        const selected = formData.get(`match-${index}`);
+        const select = document.querySelector(`select[name="match-${index}"]`);
+        select.classList.remove('correct', 'wrong');
+        if (selected) answered++;
+        if (selected === vietnamese) { correct++; select.classList.add('correct'); }
+        else if (selected) select.classList.add('wrong');
+      });
+      const arrangeQuestionsList = document.querySelectorAll('.arrange-question');
+      arrangeQuestionsList.forEach(question => {
+        const builtSentence = question.querySelector('.built-sentence');
+        builtSentence.classList.remove('correct', 'wrong');
+        if (question.dataset.selected) answered++;
+        if (normalize(question.dataset.selected) === question.dataset.answer) { correct++; builtSentence.classList.add('correct'); }
+        else if (question.dataset.selected) builtSentence.classList.add('wrong');
+      });
+      const result = document.getElementById('quiz-result');
+      const total = matchingData.length + arrangeData.length;
+      result.innerHTML = answered < total
+        ? `Bạn đã hoàn thành ${answered}/${total} câu. Hãy làm hết bài rồi nộp lại để xem điểm cuối cùng.`
+        : `Bạn đúng <strong>${correct}/${total}</strong> câu (${(correct / total * 10).toFixed(1)}/10 điểm). ${correct >= total * .7 ? 'Tốt lắm!' : 'Hãy xem lại bài và thử lại nhé.'}`;
+      result.classList.add('show');
+      document.getElementById('quiz-score').textContent = answered === total ? `Điểm: ${(correct / total * 10).toFixed(1)}/10` : 'Chưa đủ câu';
+      result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+
+    document.getElementById('reset-quiz').addEventListener('click', () => {
+      document.getElementById('quiz-form').reset();
+      document.querySelectorAll('select').forEach(select => select.classList.remove('correct', 'wrong'));
+      document.querySelectorAll('.arrange-question').forEach(question => {
+        question.dataset.selected = '';
+        question.querySelector('.built-sentence').textContent = '';
+        question.querySelector('.built-sentence').classList.remove('correct', 'wrong');
+        question.querySelectorAll('.word').forEach(word => word.classList.remove('used'));
+      });
+      document.getElementById('quiz-result').classList.remove('show');
+      document.getElementById('quiz-score').textContent = 'Chưa nộp bài';
+    });
+    document.getElementById('show-answers').addEventListener('click', () => document.getElementById('essay-answers').classList.toggle('show'));
+    document.getElementById('reset-essay').addEventListener('click', () => { document.getElementById('essay-form').reset(); document.getElementById('essay-answers').classList.remove('show'); });
+  </script>
+</body>
+</html>
