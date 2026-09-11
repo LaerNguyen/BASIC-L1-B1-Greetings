@@ -147,13 +147,13 @@
 
     <section class="panel active" id="quiz-panel">
       <div class="panel-heading">
-        <div><h2>I. Basic sentences | Mẫu câu cơ bản</h2><p class="instruction">Học và ghi nhớ các mẫu câu giao tiếp cơ bản.</p></div>
+        <div><h2>I. Basic sentences | Mẫu câu cơ bản</h2><p class="instruction">Phần 1 gồm 15 câu trắc nghiệm dựa trên các mẫu câu cơ bản.</p></div>
         <div class="score" id="quiz-score">Chưa nộp bài</div>
       </div>
       <form id="quiz-form">
         <div id="matching-questions"></div>
-        <div class="section-label">II. Substitution Drills | Bài tập thay thế</div>
-        <p class="instruction">Nhấp và kéo các từ để sắp xếp đúng thứ tự, tạo thành câu chính xác theo nghĩa gợi ý tiếng Việt bên dưới mỗi câu.</p>
+        <div class="section-label">II. Bài tập sắp xếp câu</div>
+        <p class="instruction">Nhấp và kéo các từ để sắp xếp đúng thứ tự, tạo thành câu chính xác theo nghĩa gợi ý tiếng Việt bên dưới mỗi câu. Phần 2 gồm 35 câu.</p>
         <div id="arrange-questions"></div>
         <div class="actions"><button class="primary" type="submit">Nộp bài và xem điểm</button><button class="secondary" type="button" id="reset-quiz">Làm lại</button></div>
       </form>
@@ -176,6 +176,7 @@
       ['How have you been?', 'Lâu nay bạn thế nào?'],
       ['Hi, there', 'Chào bạn.'],
       ['How are things with you?', 'Mọi việc với bạn thế nào?'],
+      ['How is it going?', 'Mọi việc thế nào?'],
       ['What’s going on with you?', 'Bạn thế nào?'],
       ['What are you doing here?', 'Bạn đang làm gì ở đây vậy?']
     ];
@@ -199,6 +200,7 @@
     const normalize = text => text.toLowerCase().replace(/[.,!?]/g, '').replace(/\s+/g, ' ').trim();
     const shuffled = items => items.slice().sort(() => Math.random() - 0.5);
     const matchingQuizData = matchingData;
+    const arrangeData = drillData.flat().slice(0, 35);
     const matchingQuestions = document.getElementById('matching-questions');
     const arrangeQuestions = document.getElementById('arrange-questions');
 
@@ -217,32 +219,30 @@
       matchingQuestions.appendChild(question);
     });
 
-    drillData.forEach((drill, drillIndex) => {
+    arrangeData.forEach(([sentence, vietnamese], drillIndex) => {
       const question = document.createElement('div');
       question.className = 'drill arrange-question';
       question.innerHTML = `<h3 class="drill-title">${drillIndex + 1}.</h3>`;
-      drill.forEach(([sentence, vietnamese], lineIndex) => {
-        const line = document.createElement('div');
-        line.className = `drill-line sortable-line${lineIndex === 0 ? ' base' : ' variant'}`;
-        line.dataset.answer = normalize(sentence);
-        line.innerHTML = `<div class="sortable-words"></div><p class="drill-meaning">${vietnamese}</p><div class="correction"></div>`;
-        const wordList = line.querySelector('.sortable-words');
-        shuffled(sentence.split(' ')).forEach(word => {
-          const chip = document.createElement('button');
-          chip.className = 'sortable-word';
-          chip.type = 'button';
-          chip.draggable = true;
-          chip.textContent = word;
-          chip.addEventListener('dragstart', () => { line.draggedWord = chip; });
-          chip.addEventListener('dragover', event => event.preventDefault());
-          chip.addEventListener('drop', event => {
-            event.preventDefault();
-            if (line.draggedWord && line.draggedWord !== chip) wordList.insertBefore(line.draggedWord, chip);
-          });
-          wordList.appendChild(chip);
+      const line = document.createElement('div');
+      line.className = 'drill-line sortable-line';
+      line.dataset.answer = normalize(sentence);
+      line.innerHTML = `<div class="sortable-words"></div><p class="drill-meaning">${vietnamese}</p><div class="correction"></div>`;
+      const wordList = line.querySelector('.sortable-words');
+      shuffled(sentence.split(' ')).forEach(word => {
+        const chip = document.createElement('button');
+        chip.className = 'sortable-word';
+        chip.type = 'button';
+        chip.draggable = true;
+        chip.textContent = word;
+        chip.addEventListener('dragstart', () => { line.draggedWord = chip; });
+        chip.addEventListener('dragover', event => event.preventDefault());
+        chip.addEventListener('drop', event => {
+          event.preventDefault();
+          if (line.draggedWord && line.draggedWord !== chip) wordList.insertBefore(line.draggedWord, chip);
         });
-        question.appendChild(line);
+        wordList.appendChild(chip);
       });
+      question.appendChild(line);
       arrangeQuestions.appendChild(question);
     });
 
@@ -286,7 +286,7 @@
         if (drillCorrect) correct++;
       });
       const result = document.getElementById('quiz-result');
-      const total = matchingData.length + drillData.length;
+      const total = matchingData.length + arrangeData.length;
       result.innerHTML = answered < total
         ? `Bạn đã hoàn thành ${answered}/${total} câu. Hãy làm hết bài rồi nộp lại để xem điểm cuối cùng.`
         : `Bạn đúng <strong>${correct}/${total}</strong> câu (${(correct / total * 10).toFixed(1)}/10 điểm). ${correct >= total * .7 ? 'Tốt lắm!' : 'Hãy xem lại bài và thử lại nhé.'}`;
