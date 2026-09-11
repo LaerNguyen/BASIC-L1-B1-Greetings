@@ -220,12 +220,12 @@
     drillData.forEach((drill, drillIndex) => {
       const question = document.createElement('div');
       question.className = 'drill arrange-question';
-      question.innerHTML = `<h3 class="drill-title">${drillIndex + 1}. Substitution Drill · Bài ${drillIndex + 1} / ${drillData.length}</h3>`;
+      question.innerHTML = `<h3 class="drill-title">${drillIndex + 1}.</h3>`;
       drill.forEach(([sentence, vietnamese], lineIndex) => {
         const line = document.createElement('div');
         line.className = `drill-line sortable-line${lineIndex === 0 ? ' base' : ' variant'}`;
         line.dataset.answer = normalize(sentence);
-        line.innerHTML = `<p class="drill-english-label">${lineIndex === 0 ? 'Câu mẫu:' : 'Từ thay thế:'}</p><div class="sortable-words"></div><p class="drill-meaning">${vietnamese}</p><div class="correction"></div>`;
+        line.innerHTML = `<div class="sortable-words"></div><p class="drill-meaning">${vietnamese}</p><div class="correction"></div>`;
         const wordList = line.querySelector('.sortable-words');
         shuffled(sentence.split(' ')).forEach(word => {
           const chip = document.createElement('button');
