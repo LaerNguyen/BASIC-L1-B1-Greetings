@@ -98,9 +98,11 @@
     .drill-line.variant { padding-left: 24px; }
     .drill-meaning { margin: 0 0 8px; color: var(--muted); font: 13px/1.5 "Montserrat", sans-serif; }
     .drill-english-label { margin: 0 0 7px; color: var(--ink); font: 600 14px/1.4 "Montserrat", sans-serif; }
-    .sortable-words { display: flex; flex-wrap: wrap; gap: 7px; min-height: 40px; }
-    .sortable-word { border: 1px solid #9cc7b3; border-radius: 6px; background: var(--mint); color: var(--navy); padding: 8px 10px; font: 14px "Montserrat", sans-serif; cursor: grab; user-select: none; }
-    .sortable-word:active { cursor: grabbing; }
+    .word-bank, .sortable-words { display: flex; flex-wrap: wrap; gap: 7px; min-height: 40px; }
+    .word-bank { margin-bottom: 8px; }
+    .sortable-words { border: 1px dashed #9cc7b3; border-radius: 6px; padding: 6px; }
+    .sortable-word { border: 1px solid #9cc7b3; border-radius: 6px; background: var(--mint); color: var(--navy); padding: 8px 10px; font: 14px "Montserrat", sans-serif; cursor: pointer; user-select: none; }
+    .word-bank .sortable-word.used { opacity: .45; text-decoration: line-through; }
     .sortable-words.correct { border: 2px solid var(--green); background: #f0fbf5; padding: 5px; }
     .sortable-words.wrong { border: 2px solid var(--red); background: #fff2f2; padding: 5px; }
     .correction { display: none; margin: 9px 0 0; color: var(--red); font: 600 13px/1.5 "Montserrat", sans-serif; }
@@ -153,7 +155,7 @@
       <form id="quiz-form">
         <div id="matching-questions"></div>
         <div class="section-label">II. Bài tập sắp xếp câu</div>
-        <p class="instruction">Nhấp và kéo các từ để sắp xếp đúng thứ tự, tạo thành câu chính xác theo nghĩa gợi ý tiếng Việt bên dưới mỗi câu. Phần 2 gồm 35 câu.</p>
+        <p class="instruction">Nhấp vào các từ theo đúng thứ tự để tạo thành câu theo nghĩa gợi ý tiếng Việt bên dưới. Nhấp lại vào từ đã chọn để bỏ từ đó. Phần 2 gồm 35 câu.</p>
         <div id="arrange-questions"></div>
         <div class="actions"><button class="primary" type="submit">Nộp bài và xem điểm</button><button class="secondary" type="button" id="reset-quiz">Làm lại</button></div>
       </form>
@@ -226,21 +228,27 @@
       const line = document.createElement('div');
       line.className = 'drill-line sortable-line';
       line.dataset.answer = normalize(sentence);
-      line.innerHTML = `<div class="sortable-words"></div><p class="drill-meaning">${vietnamese}</p><div class="correction"></div>`;
+      line.innerHTML = `<div class="word-bank"></div><div class="sortable-words"></div><p class="drill-meaning">${vietnamese}</p><div class="correction"></div>`;
       const wordList = line.querySelector('.sortable-words');
-      shuffled(sentence.split(' ')).forEach(word => {
+      const wordBank = line.querySelector('.word-bank');
+      shuffled(sentence.split(' ')).forEach((word, wordIndex) => {
         const chip = document.createElement('button');
         chip.className = 'sortable-word';
         chip.type = 'button';
-        chip.draggable = true;
+        chip.dataset.wordIndex = wordIndex;
         chip.textContent = word;
-        chip.addEventListener('dragstart', () => { line.draggedWord = chip; });
-        chip.addEventListener('dragover', event => event.preventDefault());
-        chip.addEventListener('drop', event => {
-          event.preventDefault();
-          if (line.draggedWord && line.draggedWord !== chip) wordList.insertBefore(line.draggedWord, chip);
+        chip.addEventListener('click', () => {
+          if (chip.classList.contains('used')) return;
+          chip.classList.add('used');
+          const selectedWord = chip.cloneNode(true);
+          selectedWord.classList.remove('used');
+          selectedWord.addEventListener('click', () => {
+            chip.classList.remove('used');
+            selectedWord.remove();
+          });
+          wordList.appendChild(selectedWord);
         });
-        wordList.appendChild(chip);
+        wordBank.appendChild(chip);
       });
       question.appendChild(line);
       arrangeQuestions.appendChild(question);
@@ -299,7 +307,10 @@
       document.getElementById('quiz-form').reset();
       document.querySelectorAll('.option').forEach(option => option.classList.remove('correct', 'wrong'));
       document.querySelectorAll('.sortable-line').forEach(line => {
-        line.querySelector('.sortable-words').classList.remove('correct', 'wrong');
+        const wordArea = line.querySelector('.sortable-words');
+        wordArea.classList.remove('correct', 'wrong');
+        line.querySelectorAll('.word-bank .sortable-word.used').forEach(word => word.classList.remove('used'));
+        wordArea.replaceChildren();
         line.querySelector('.correction').classList.remove('show');
       });
       document.getElementById('quiz-result').classList.remove('show');
